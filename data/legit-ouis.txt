@@ -1,0 +1,12 @@
+# legit-ouis.txt
+# Λίστα με OUI γνωστών κατασκευαστών για MAC Spoofing
+
+00:1A:A9  # Dell
+00:1E:C9  # HP
+00:16:3E  # Cisco/Linksys
+00:50:56  # VMware (για εικονικές μηχανές, πολύ συχνό)
+40:A6:E7  # Samsung
+00:26:4A  # Apple/MacBook
+00:80:64  # Microsoft
+
+Add legit-ouis.txt for MAC spoofing data.
