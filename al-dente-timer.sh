@@ -1,3 +1,4 @@
+#!/bin/bash
 BASH echo "Press A for 10 min | Press B for 8 min"
 LED 1 YELLOW  # Αναβοσβήνει κίτρινο για να δείξει αναμονή εισόδου
 
