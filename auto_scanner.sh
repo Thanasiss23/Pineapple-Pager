@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 REPORT="network_audit.txt"
 
