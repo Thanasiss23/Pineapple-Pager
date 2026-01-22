@@ -1,19 +1,29 @@
-# Payload Title: Disco_Pager_Mode.sh
-# Target: WiFi Pineapple Pager
+#!/bin/bash
+# Title: Disco Pager Mode
+# Author: Thanasis
+# Description: Cycles LEDs and beeps until manually stopped.
 
-WHILE TRUE
-    # 1. LED Πράσινο
-    LED 1 GREEN
-    BUZZER 1      # Σύντομος ήχος
-    SLEEP 1
+LOG blue "DISCO MODE ACTIVATED"
+LOG "Press Ctrl+C or Stop in Pager to exit."
 
-    # 2. LED Κίτρινο
-    LED 1 YELLOW
+# Ξεκινάει το ατέρμονο loop
+while true
+do
+    # 1. LED Πράσινο & Ήχος
+    LED GREEN
     BUZZER 1
-    SLEEP 1
+    LOG green "LED: GREEN | BEEP"
+    sleep 1
 
-    # 3. LED Κόκκινο
-    LED 1 RED
+    # 2. LED Κίτρινο & Ήχος
+    LED YELLOW
     BUZZER 1
-    SLEEP 1
-END_WHILE
+    LOG yellow "LED: YELLOW | BEEP"
+    sleep 1
+
+    # 3. LED Κόκκινο & Ήχος
+    LED RED
+    BUZZER 1
+    LOG red "LED: RED | BEEP"
+    sleep 1
+done
