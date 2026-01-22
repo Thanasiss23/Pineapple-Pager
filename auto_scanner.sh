@@ -1,39 +1,40 @@
 #!/bin/bash
+# Title: Auto Network Scanner
+# Author: Thanasis
 
-REPORT="network_audit.txt"
+LOG blue "=== STARTING NETWORK AUDIT ==="
 
-{
-echo "=========================================="
-echo "FULL NETWORK AUDIT: $(date)"
-echo "=========================================="
-
-# 1. Εξωτερικός Έλεγχος
+# 1. External Check
 MY_IP=$(curl -s ifconfig.me)
-echo "[+] Checking Public IP: $MY_IP"
-nmap -Pn -F $MY_IP
-echo "------------------------------------------"
+LOG yellow "Public IP: $MY_IP"
 
-# 2. Ανακάλυψη Εσωτερικών Συσκευών
-echo "[+] Scanning Local Network for active hosts..."
-# Παίρνουμε μόνο τις IP διευθύνσεις από το nmap
-ACTIVE_IPS=$(nmap -sn 192.168.1.0/24 | grep "Nmap scan report for" | awk '{print $NF}' | tr -d '()')
+# 2. Local Discovery
+# Βρίσκουμε το subnet αυτόματα
+LOCAL_SUBNET=$(ip route | grep -v default | awk '{print $1}' | head -n 1)
+LOG blue "Scanning Subnet: $LOCAL_SUBNET"
+
+ACTIVE_IPS=$(nmap -sn "$LOCAL_SUBNET" | grep "Nmap scan report for" | awk '{print $NF}' | tr -d '()')
 
 for ip in $ACTIVE_IPS
 do
-    echo "[*] Analyzing Device: $ip"
+    LOG "------------------------------"
+    LOG green "DEVICE FOUND: $ip"
     
-    # Γρήγορο scan στις βασικές θύρες της συσκευής
-    SCAN_RESULT=$(nmap -Pn -F $ip)
-    echo "$SCAN_RESULT" | grep "/tcp"
+    # Port Scan
+    SCAN_RESULT=$(nmap -Pn -F "$ip")
     
-    # Ειδικός έλεγχος αν είναι Google/Cast συσκευή (θύρα 8008)
-    if echo "$SCAN_RESULT" | grep -q "8008/tcp"; then
-        NAME=$(curl -s --connect-timeout 2 http://$ip:8008/setup/eureka_info | grep -o '"name":"[^"]*"' | cut -d'"' -f4)
-        if [ -z "$NAME" ]; then NAME="Unknown Cast Device"; fi
-        echo "    >>> Identity: $NAME"
+    # Αν βρει ανοιχτές θύρες, τις δείχνει
+    OPEN_PORTS=$(echo "$SCAN_RESULT" | grep "/tcp" | grep "open")
+    if [ -n "$OPEN_PORTS" ]; then
+        LOG "Ports: $OPEN_PORTS"
     fi
-    echo "------------------------------------------"
+    
+    # Έλεγχος για TV Box / Cast
+    if echo "$SCAN_RESULT" | grep -q "8008/tcp"; then
+        NAME=$(curl -s --connect-timeout 2 "http://$ip:8008/setup/eureka_info" | grep -o '"name":"[^"]*"' | cut -d'"' -f4)
+        LOG cyan "IDENTITY: $NAME"
+    fi
 done
 
-echo -e "AUDIT COMPLETE\n"
-} | tee -a $REPORT
+LOG blue "=== AUDIT COMPLETE ==="
+PROMPT "Scan Finished. Check logs for details."
