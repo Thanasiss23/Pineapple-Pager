@@ -1,18 +1,3 @@
-🍝 Payload: Al Dente Presets for 10m and 8m
-
-Σε αυτό το σενάριο, το Pager δεν τρέχει την αντίστροφη μέτρηση αμέσως. Περιμένει τον χρήστη να πατήσει ένα πλήκτρο
-
-Επεξήγηση:
-Χρησιμοποιούμε ένα WHILE TRUE loop που περιέχει τα Alert Triggers (ON BUTTON_A_PRESSED).
-
-Το Pager παραμένει σε κατάσταση αναμονής μέχρι να πατήσετε το πλήκτρο A (ορίζει 10 λεπτά) ή το πλήκτρο B (ορίζει 8 λεπτά).
-
-Η εντολή BREAK σταματά το loop αναμονής και η εκτέλεση του script συνεχίζει με την αντίστροφη μέτρηση (SLEEP $cooking_time).
-
-
-
-# Payload Title: Al_Dente_Presets.sh
-
 BASH echo "Press A for 10 min | Press B for 8 min"
 LED 1 YELLOW  # Αναβοσβήνει κίτρινο για να δείξει αναμονή εισόδου
 
